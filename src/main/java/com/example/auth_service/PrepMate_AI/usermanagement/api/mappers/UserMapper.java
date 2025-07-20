@@ -3,24 +3,26 @@ package com.example.auth_service.PrepMate_AI.usermanagement.api.mappers;
 
 import com.example.auth_service.PrepMate_AI.mappers.BaseMapper;
 import com.example.auth_service.PrepMate_AI.usermanagement.api.resources.UserDTO;
-import com.example.auth_service.PrepMate_AI.usermanagement.db.models.Users;
+import com.example.auth_service.PrepMate_AI.usermanagement.db.models.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
-public class UserMapper implements BaseMapper<Users, UserDTO>
+public class UserMapper implements BaseMapper<User, UserDTO>
 {
 
     @Override
-    public Users mapToModel(UserDTO userDTO)
+    public User mapToModel(UserDTO userDTO)
     {
         try {
             if(userDTO!=null)
             {
-                Users user = new Users();
+                User user = new User();
                 if(userDTO.getId()!=null)
                 {
                     user.setId(userDTO.getId());
@@ -44,7 +46,7 @@ public class UserMapper implements BaseMapper<Users, UserDTO>
     }
 
     @Override
-    public UserDTO mapToResource(Users users)
+    public UserDTO mapToResource(User users)
     {
         try
         {

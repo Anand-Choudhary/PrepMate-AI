@@ -1,7 +1,7 @@
 package com.example.auth_service.PrepMate_AI.usermanagement.service.impl;
 
 import com.example.auth_service.PrepMate_AI.usermanagement.db.dao.UserDao;
-import com.example.auth_service.PrepMate_AI.usermanagement.db.models.Users;
+import com.example.auth_service.PrepMate_AI.usermanagement.db.models.User;
 import com.example.auth_service.PrepMate_AI.usermanagement.service.UserService;
 import com.example.auth_service.PrepMate_AI.usermanagement.utility.UniqueToken;
 import lombok.extern.slf4j.Slf4j;
@@ -24,23 +24,23 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
     @Override
-    public Optional<Users> findById(Long id) {
+    public Optional<User> findById(Long id) {
         return Optional.empty();
     }
 
     @Override
-    public Iterable<Users> findAll() {
+    public Iterable<User> findAll() {
         return null;
     }
 
     @Override
-    public Users create(Users users)
+    public User create(User users)
     {
         //TODO -> Activate user profile logic is pending.
         try{
             users.setActivationToken(uniqueToken.createUniqueToken());
             users.setPassword(passwordEncoder.encode(users.getPassword()));
-            Users newUser = userDao.save(users);
+            User newUser = userDao.save(users);
             return newUser;
         }
         catch (Exception e)
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Users update(Users users) {
+    public User update(User users) {
         return null;
     }
 }

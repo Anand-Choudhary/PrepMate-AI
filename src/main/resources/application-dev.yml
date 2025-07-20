@@ -8,5 +8,5 @@ spring:
     hibernate:
       ddl-auto: update
 jwt:
-  secret: "PrepMateAISecretKey"
+  secret: "4f5e08c3d84b7d6s6rhw9d6t53e861bc473d7a3f01918155a0f50ea2a75c27379"
   expiration-time: 3600000

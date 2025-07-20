@@ -1,7 +1,7 @@
-package com.example.auth_service.PrepMate_AI.utility;
+package com.example.auth_service.PrepMate_AI.usermanagement.utility;
 
 
-import com.example.auth_service.PrepMate_AI.usermanagement.db.models.Users;
+import com.example.auth_service.PrepMate_AI.usermanagement.db.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
+@Component
 public class JWTUtil
 {
     @Value("${jwt.secret}")
@@ -22,7 +22,7 @@ public class JWTUtil
     @Value("${jwt.expiration-time}")
     private long expirationTime;
 
-    public String generateToken(Users users)
+    public String generateToken(User users)
     {
         Map<String,Object> claims = new HashMap<>();
         claims.put("email",users.getEmail());
@@ -35,11 +35,11 @@ public class JWTUtil
         return Jwts.builder().setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS256,secretKey).compact();
     }
 
-    public Boolean validateToken(String token, Users user)
+    public Boolean validateToken(String token, User user)
     {
         final String email = extractEmail(token);
         return (email.equals(user.getEmail()) && !isTokenExpired(token));

@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Users extends BaseModel {
+public class User extends BaseModel {
 
     @NotNull
     @Column(name = "email", unique = true, nullable = false)
