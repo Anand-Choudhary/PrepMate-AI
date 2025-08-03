@@ -3,6 +3,7 @@ package com.example.auth_service.PrepMate_AI.usermanagement.service.impl;
 import com.example.auth_service.PrepMate_AI.usermanagement.db.dao.UserDao;
 import com.example.auth_service.PrepMate_AI.usermanagement.db.models.User;
 import com.example.auth_service.PrepMate_AI.usermanagement.service.UserService;
+import com.example.auth_service.PrepMate_AI.usermanagement.utility.PasswordEncoderConfig;
 import com.example.auth_service.PrepMate_AI.usermanagement.utility.UniqueToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
 
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UniqueToken uniqueToken;
@@ -38,14 +40,16 @@ public class UserServiceImpl implements UserService {
     {
         //TODO -> Activate user profile logic is pending.
         try{
+            log.info("Inside create in UserServiceImpl");
             users.setActivationToken(uniqueToken.createUniqueToken());
-            users.setPassword(passwordEncoder.encode(users.getPassword()));
+            String encodedPassword = passwordEncoder.encode(users.getPassword());
+            users.setPassword(encodedPassword);
             User newUser = userDao.save(users);
             return newUser;
         }
         catch (Exception e)
         {
-            log.error("Error in registering a new user");
+            log.error("Error in registering a new user in create in UserServiceImpl : {}",e.getMessage(),e);
             throw e;
         }
     }

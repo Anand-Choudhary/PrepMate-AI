@@ -35,20 +35,22 @@ public class UserController {
     private JWTUtil jwtUtil;
 
     @PostMapping(value="/register")
-    public ResponseDTO createUser(@Valid @RequestBody UserDTO userDTO)
+    public ResponseDTO<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO)
     {
-        try{
+        try
+        {
+            log.info("Inside createUser in UserController");
             return userManager.create(userDTO);
         }
         catch (Exception e)
         {
-            log.error("Error in UserController");
-            return new ResponseDTO("400","BAD  REQUEST", false);
+            log.error("Error while creating a new user in UserController : {}, stackTrace : {}", e.getMessage(), e.getStackTrace());
+            return new ResponseDTO("400", e.getMessage(), false);
         }
     }
 
     @PostMapping(value = "/login")
-    public ResponseDTO logInUser(@Valid @RequestBody UserDTO userDTO)
+    public ResponseDTO<String> logInUser(@Valid @RequestBody UserDTO userDTO)
     {
         try {
             authenticationManager.authenticate(

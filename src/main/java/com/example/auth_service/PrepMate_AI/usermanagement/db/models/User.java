@@ -13,7 +13,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "pm_users")
+@Table(name = "pm_user")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

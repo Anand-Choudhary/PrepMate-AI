@@ -20,9 +20,11 @@ public class UserMapper implements BaseMapper<User, UserDTO>
     public User mapToModel(UserDTO userDTO)
     {
         try {
+            log.info("Inside mapToModel in UserMapper");
+            User user = new User();
             if(userDTO!=null)
             {
-                User user = new User();
+
                 if(userDTO.getId()!=null)
                 {
                     user.setId(userDTO.getId());
@@ -33,14 +35,12 @@ public class UserMapper implements BaseMapper<User, UserDTO>
                 user.setDateOfBirth(userDTO.getDateOfBirth());
                 user.setPhoneNumber(userDTO.getPhoneNumber());
                 user.setExperience(userDTO.getExperience());
-
-                return user;
             }
-            return null;
+            return user;
         }
         catch (Exception e)
         {
-            log.error("Exception in UserMapper in mapToModel while mapping UserDto error msg :{}, error:{}",e.getMessage(),e.getStackTrace());
+            log.error("Exception in mapToModel in UserMapper while mapping UserDto to User error msg :{}",e.getMessage(),e);
             throw e;
         }
     }
@@ -50,9 +50,9 @@ public class UserMapper implements BaseMapper<User, UserDTO>
     {
         try
         {
+            UserDTO userDTO = new UserDTO();
             if(users!=null)
             {
-                UserDTO userDTO = new UserDTO();
                 userDTO.setId(users.getId());
                 userDTO.setName(users.getName());
                 userDTO.setEmail(users.getEmail());
@@ -60,13 +60,12 @@ public class UserMapper implements BaseMapper<User, UserDTO>
                 userDTO.setDateOfBirth(users.getDateOfBirth());
                 userDTO.setPhoneNumber(users.getPhoneNumber());
                 userDTO.setExperience(users.getExperience());
-                return userDTO;
             }
-            return null;
+            return userDTO;
         }
         catch(Exception e)
         {
-            log.error("Exception in UserMapper in mapToResources while mapping UserDto error msg :{}, error:{}",e.getMessage(),e.getStackTrace());
+            log.error("Exception in mapToResources in UserMapper while mapping UserDto error msg :{}",e.getMessage(),e);
             throw e;
         }
     }

@@ -39,7 +39,7 @@ public class UserManager implements BaseManager<UserDTO,Long>
     {
         try{
             UserDTO dto = userMapper.mapToResource(userService.create(userMapper.mapToModel(userDTO)));
-            return new ResponseDTO("200", "SUCCESS", true, dto);
+            return new ResponseDTO<UserDTO>("200", "SUCCESS", true, dto);
         }
         catch (Exception e)
         {

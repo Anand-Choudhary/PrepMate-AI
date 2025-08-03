@@ -19,12 +19,17 @@ public class SecurityConfig
     @Autowired
     private JwtAuthenticationFilter jwtFilter;
 
+    private static final String[] PUBLIC_URLS = {
+            "/api/user/login",
+            "/api/user/register"
+    };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(PUBLIC_URLS).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
