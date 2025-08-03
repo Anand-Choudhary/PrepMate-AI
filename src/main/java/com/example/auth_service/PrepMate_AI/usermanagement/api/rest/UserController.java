@@ -2,6 +2,7 @@ package com.example.auth_service.PrepMate_AI.usermanagement.api.rest;
 
 import com.example.auth_service.PrepMate_AI.controllers.ResponseDTO;
 import com.example.auth_service.PrepMate_AI.usermanagement.api.manager.UserManager;
+import com.example.auth_service.PrepMate_AI.usermanagement.api.resources.LogInDTO;
 import com.example.auth_service.PrepMate_AI.usermanagement.api.resources.UserDTO;
 import com.example.auth_service.PrepMate_AI.usermanagement.db.models.User;
 import com.example.auth_service.PrepMate_AI.usermanagement.service.impl.LoggedInUser;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,7 @@ public class UserController {
     @Autowired
     private LoggedInUser loggedInUser;
 
-    @Autowired
-    private JWTUtil jwtUtil;
+
 
     @PostMapping(value="/register")
     public ResponseDTO<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO)
@@ -45,25 +45,21 @@ public class UserController {
         catch (Exception e)
         {
             log.error("Error while creating a new user in UserController : {}, stackTrace : {}", e.getMessage(), e.getStackTrace());
-            return new ResponseDTO("400", e.getMessage(), false);
+            return new ResponseDTO<>("400", e.getMessage(), false);
         }
     }
 
     @PostMapping(value = "/login")
-    public ResponseDTO<String> logInUser(@Valid @RequestBody UserDTO userDTO)
+    public ResponseDTO<LogInDTO> logInUser(@Valid @RequestBody LogInDTO logInDTO)
     {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
-
-            final UserDetails userDetails = loggedInUser.loadUserByUsername(userDTO.getEmail());
-            final String jwt = jwtUtil.generateToken((User) userDetails);
-
-            return new ResponseDTO<String>("200", "Logged In Successfully", true, jwt);
+            log.info("Inside logInUser in UserController");
+            return userManager.loggingUser(logInDTO);
         }
         catch (Exception e)
         {
-            throw e;
+            log.error("Error logging in a user in UserController : {}, stackTrace : {}", e.getMessage(), e.getStackTrace());
+            return new ResponseDTO<>("400", e.getMessage(), false);
         }
 
     }

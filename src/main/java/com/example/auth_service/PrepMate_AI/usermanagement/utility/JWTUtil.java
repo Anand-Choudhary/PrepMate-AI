@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -22,12 +23,12 @@ public class JWTUtil
     @Value("${jwt.expiration-time}")
     private long expirationTime;
 
-    public String generateToken(User users)
+    public String generateToken(UserDetails userDetails)
     {
         Map<String,Object> claims = new HashMap<>();
-        claims.put("email",users.getEmail());
-        claims.put("activationToken",users.getActivationToken());
-        return createToken(claims,users.getEmail());
+        claims.put("email",userDetails.getUsername());
+        claims.put("activationToken",userDetails.getPassword());
+        return createToken(claims,userDetails.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject)

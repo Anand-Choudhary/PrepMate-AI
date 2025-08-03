@@ -50,6 +50,7 @@ public class User extends BaseModel {
     private Integer loginCount;
 
     @Column(name = "login_status")
+    @Enumerated(EnumType.STRING)
     private Status loginStatus;
 
     @Column(name = "auth_token")
