@@ -1,5 +1,6 @@
 package com.example.auth_service.PrepMate_AI.usermanagement.service.impl;
 
+import com.example.auth_service.PrepMate_AI.Kafka.Producers.AccountVerifyProducer;
 import com.example.auth_service.PrepMate_AI.usermanagement.api.resources.UserDTO;
 import com.example.auth_service.PrepMate_AI.usermanagement.db.dao.UserDao;
 import com.example.auth_service.PrepMate_AI.usermanagement.db.models.User;
@@ -24,10 +25,16 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UniqueToken uniqueToken;
+
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private AccountVerifyProducer accountVerifyProducer;
+
     @Override
     public Optional<User> findById(Long id) {
         return Optional.empty();
@@ -49,7 +56,18 @@ public class UserServiceImpl implements UserService {
             users.setAccountStatus(Status.ACTIVE);
             String encodedPassword = passwordEncoder.encode(users.getPassword());
             users.setPassword(encodedPassword);
-            return userDao.save(users);
+            User newUser = userDao.save(users);
+
+            accountVerifyProducer.sendVerificationMessage(newUser.getId().toString(), newUser.getEmail(), newUser.getActivationToken())
+                    .whenComplete((result, ex) -> {
+                        if (ex != null) {
+                            log.error("Kafka message send failed for userId={}", newUser.getId(), ex);
+                            // optional: save a "pending verification" record to DB, or push to retry queue
+                        } else {
+                            log.info("Kafka message sent for activating profile: {}", result);
+                        }
+                    });
+            return newUser;
         }
         catch (Exception e)
         {
